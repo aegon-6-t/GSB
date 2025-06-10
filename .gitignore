@@ -1,0 +1,23 @@
+# Variables d'environnement (SECRETS !)
+.env
+.env.local
+.env.production
+.env.development
+
+# Clés AWS
+aws-credentials
+aws-config
+*.pem
+*.key
+
+# MongoDB
+mongodb.conf
+
+# Dossiers avec des secrets
+config/
+secrets/
+
+# Logs et fichiers temporaires
+*.log
+node_modules/
+.DS_Store
