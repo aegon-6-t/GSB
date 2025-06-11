@@ -47,7 +47,7 @@ const getUserByEmail = async (req, res) => {
 
 const updateUser = async (req, res) => {
     try {
-        const { email } = req.query
+        const { email } = req.params
         const { name, newEmail, password, role } = req.body
         const newPassword = password && sha256(password)
         const user = await User.findOneAndUpdate({ email }, { name, email: newEmail, password: newPassword, role }, { new: true })

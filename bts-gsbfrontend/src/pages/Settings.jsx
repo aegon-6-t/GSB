@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import { useAuth } from '../AuthContext/AuthContext';
+import { authAPI } from '../services/api.jsx';
 
 export default function Settings() {
   const { user, logout } = useAuth();
@@ -50,7 +51,7 @@ export default function Settings() {
   };
 
   // Soumettre le changement d'email
-  const handleEmailSubmit = (e) => {
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
 
     // Validation basique
@@ -71,7 +72,7 @@ export default function Settings() {
 
     // Appel API pour changer l'email
     try {
-      const response = authAPI.updateUser(emailForm.currentEmail, ({ email: emailForm.newEmail }))
+      const response = await authAPI.updateUser(emailForm.currentEmail, ({ email: emailForm.newEmail }))
       setEmailMessage({ type: 'success', text: 'Adresse email mise à jour avec succès!' });
       setEmailForm(prev => ({ ...prev, newEmail: '', confirmEmail: '' }));
 

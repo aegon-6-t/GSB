@@ -5,7 +5,7 @@ const authenticationController = require('../controllers/authentication_controll
 
 router.post('/', userController.createUser)
 router.get('/', authenticationController.verifyToken,userController.getUsers)
-router.put('/', authenticationController.verifyToken, userController.updateUser)
+router.put('/:email', authenticationController.verifyToken, userController.updateUser)
 router.delete('/', authenticationController.verifyToken, userController.deleteUser)
 
 module.exports = router
