@@ -69,15 +69,15 @@ export default function Settings() {
       return;
     }
 
-    // Ici vous ajouterez votre logique d'appel API
-    console.log('Changement d\'email:', {
-      currentEmail: emailForm.currentEmail,
-      newEmail: emailForm.newEmail
-    });
+    // Appel API pour changer l'email
+    try {
+      const response = authAPI.updateUser(emailForm.currentEmail, ({ email: emailForm.newEmail }))
+      setEmailMessage({ type: 'success', text: 'Adresse email mise à jour avec succès!' });
+      setEmailForm(prev => ({ ...prev, newEmail: '', confirmEmail: '' }));
 
-    // Simulation de succès (à remplacer par votre logique)
-    setEmailMessage({ type: 'success', text: 'Adresse email mise à jour avec succès!' });
-    setEmailForm(prev => ({ ...prev, newEmail: '', confirmEmail: '' }));
+    } catch (error) {
+      setEmailMessage({ type: 'error', text: 'Erreur lors de la mise à jour de l\'email' });
+    }
   };
 
   // Soumettre le changement de mot de passe

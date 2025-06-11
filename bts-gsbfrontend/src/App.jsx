@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './AuthContext/AuthContext'
 import Login from './pages/Login';
 import Signin from './pages/Signin'
 import Dashboard from './pages/Dashboard';
+import Settings from './pages/Settings';
 
 function AppRoutes() {
   const { user, loading } = useAuth();
@@ -35,6 +36,13 @@ function AppRoutes() {
             user ?
               <Navigate to="/dashboard" replace /> :
               <Signin />
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            user ?
+              <Settings /> : <Navigate to="/login" replace />
           }
         />
         <Route path="/" element={<Navigate to={user ? "/dashboard" : "/login"} />} />
