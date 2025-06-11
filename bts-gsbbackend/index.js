@@ -15,7 +15,7 @@ db.on('open', () => { console.log('Connected to MongoDB')})
 
 // Configuration CORS
 app.use(cors({
-  origin: 'http://localhost:5173', // URL de votre frontend
+  origin: 'http://localhost:5173, https://gsb-galaxyswissbourdin.onrender.com', // URL de votre frontend
   credentials: true // Pour permettre l'envoi des cookies si nécessaire
 }));
 
