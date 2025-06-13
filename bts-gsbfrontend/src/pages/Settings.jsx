@@ -72,7 +72,7 @@ export default function Settings() {
 
     // Appel API pour changer l'email
     try {
-      const response = await authAPI.updateUser(emailForm.currentEmail, ({ email: emailForm.newEmail }))
+      const response = await authAPI.updateUser(emailForm.currentEmail, { newEmail: emailForm.newEmail })
       setEmailMessage({ type: 'success', text: 'Adresse email mise à jour avec succès!' });
       setEmailForm(prev => ({ ...prev, newEmail: '', confirmEmail: '' }));
 
@@ -82,7 +82,7 @@ export default function Settings() {
   };
 
   // Soumettre le changement de mot de passe
-  const handlePasswordSubmit = (e) => {
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
 
     // Validation basique
@@ -102,14 +102,16 @@ export default function Settings() {
     }
 
     // Ici vous ajouterez votre logique d'appel API
-    console.log('Changement de mot de passe:', {
-      currentPassword: passwordForm.currentPassword,
-      // Ne pas logger le nouveau mot de passe en production
-    });
-
-    // Simulation de succès (à remplacer par votre logique)
-    setPasswordMessage({ type: 'success', text: 'Mot de passe mis à jour avec succès!' });
-    setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    try {
+      const response = await authAPI.updateUser(user.email, {
+        currentPassword: passwordForm.currentPassword,
+        newPassword: passwordForm.newPassword
+      })
+      setPasswordMessage({ type: 'success', text: 'Mot de passe mis à jour avec succès!' });
+      setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    } catch (error) {
+      setPasswordMessage({ type: 'error', text: 'Erreur lors de la mise à jour du mot de passe' });
+    }
   };
 
   return (

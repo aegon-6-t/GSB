@@ -48,14 +48,32 @@ const getUserByEmail = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         const { email } = req.params
-        const { name, newEmail, password, role } = req.body
-        const newPassword = password && sha256(password)
-        const user = await User.findOneAndUpdate({ email }, { name, email: newEmail, password: newPassword, role }, { new: true })
-        if (!user) {
-            throw new Error('User not found', { cause: 404 })
-        } else {
-            res.status(200).json(user)
+        const { name, newEmail, currentPassword, newPassword, role } = req.body
+
+        const existingUser = await User.findOne({ email })
+        if (!existingUser) {
+            throw new Error('User not found', { cause: 404})
         }
+
+        const updateData = {}
+        if (name) updateData.name = name
+        if (newEmail) updateData.email = newEmail
+        if (role) updateData.role = role
+
+        if (newPassword) {
+            if (!currentPassword) {
+                return res.status(400).json({ message: 'Mot de passe actuel requis' })
+            }
+            const hashedCurrentPassword = sha256(currentPassword + process.env.SALT)
+            if (hashedCurrentPassword !== existingUser.password) {
+                return res.status(400).json({message: 'Mot de passe actuel incorrect'})
+            }
+            updateData.password = sha256(newPassword + process.env.SALT)
+        }
+
+        const user = await User.findOneAndUpdate({ email },  updateData, { new: true })
+        res.status(200).json(user)
+        
     } catch (error) {
         if (error['cause'] === 404) {
             res.status(404).json({ message: error.message })
