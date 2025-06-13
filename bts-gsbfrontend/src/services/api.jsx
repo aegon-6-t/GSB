@@ -156,17 +156,8 @@ export const authAPI = {
     try {
       const formData = new FormData();
 
-      // On crée l'objet metadata
-      const metadata = {
-        description: billData.description,
-        amount: billData.amount,
-        status: billData.status,
-        type: billData.type,
-        date: billData.date
-      };
-
       // On ajoute les metadata en JSON
-      formData.append('metadata', JSON.stringify(metadata));
+      formData.append('metadata', JSON.stringify(billData.metadata));
 
       // Si on a un nouveau fichier proof
       if (billData.proof instanceof File) {

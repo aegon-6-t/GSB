@@ -71,12 +71,31 @@ const getBillById = async (req, res) => {
 const updateBill = async (req, res) => {
     try {
         const { id } = req.params
-        const { date, amount, proof, description, status, type } = req.body
+        
+        // Parse metadata from form data
+        const { date, amount, description, status, type } = JSON.parse(req.body.metadata)
+        
+        // Prepare update data
+        const updateData = {
+            date,
+            amount,
+            description,
+            status,
+            type
+        }
+        
+        // Handle file upload if new file is provided
+        if (req.file) {
+            const proofUrl = await uploadToS3(req.file)
+            updateData.proof = proofUrl
+        }
+        
         const bill = await Bill.findByIdAndUpdate(
             id,
-            { date, amount, proof, description, status, type },
+            updateData,
             { new: true }
         )
+        
         if (!bill) {
             throw new Error('Bill not found', { cause: 404 })
         } else {
@@ -86,6 +105,7 @@ const updateBill = async (req, res) => {
         if (error['cause'] === 404) {
             res.status(404).json({ message: error.message })
         } else {
+            console.error('Error updating bill:', error)
             res.status(500).json({ message: "Server error" })
         }
     }
