@@ -254,12 +254,12 @@ export default function Dashboard() {
           </div>
 
           {/* Statistics Section */}
-          <div className="mb-8">
+          <div className="mb-6">
             <BillsStatistics bills={bills} />
           </div>
 
           {/* Filters */}
-          <div className="mb-6 grid grid-cols-1 gap-y-4 md:grid-cols-3 md:gap-x-4">
+          <div className="mb-4 grid grid-cols-1 gap-y-4 md:grid-cols-3 md:gap-x-4">
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
@@ -294,8 +294,8 @@ export default function Dashboard() {
 
           {/* Bills Table */}
           {filteredBills.length === 0 ? (
-            <div className="mt-12 text-center">
-              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="mt-8 text-center">
+              <svg className="mx-auto h-10 w-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -303,14 +303,14 @@ export default function Dashboard() {
                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                 />
               </svg>
-              <h3 className="mt-2 text-sm font-semibold text-gray-900">No bills found</h3>
+              <h3 className="mt-2 text-sm font-semibold text-gray-900">Aucune facture trouvée</h3>
               <p className="mt-1 text-sm text-gray-500">
                 {searchQuery || filterStatus !== 'All'
-                  ? "Try adjusting your search or filter to find what you're looking for."
-                  : 'Get started by creating a new bill.'}
+                  ? "Essayez d'ajuster votre recherche ou filtre."
+                  : 'Commencez par créer une nouvelle facture.'}
               </p>
               {!searchQuery && filterStatus === 'All' && (
-                <div className="mt-6">
+                <div className="mt-4">
                   <button
                     type="button"
                     onClick={openAddBillModal}
@@ -319,169 +319,171 @@ export default function Dashboard() {
                     <svg className="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                       <path d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
                     </svg>
-                    Add Bill
+                    Ajouter une facture
                   </button>
                 </div>
               )}
             </div>
           ) : (
-            <div className="mt-8 flex flex-col">
+            <div className="mt-4 flex flex-col">
               <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                   <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                    <table className="min-w-full divide-y divide-gray-300">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                            ID
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Date
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Type
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Amount
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Description
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Status
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Actions
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200 bg-white">
-                        {filteredBills.map((bill) => (
-                          <tr
-                            key={bill._id}
-                            className="hover:bg-gray-50"
-                          >
-                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                              #{bill._id}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {formatDate(bill.date)}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {bill.type}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900 font-medium">
-                              ${bill.amount.toFixed(2)}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm">
-                              {bill.description}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm">
-                              <span
-                                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getStatusClasses(bill.status)} ${getStatusClickableClasses(user?.role === 'admin')}`}
-                                onClick={() => handleStatusClick(bill)}
-                                title={user?.role === 'admin' ? 'Cliquer pour changer le statut' : ''}
-                              >
-                                {bill.status}
-                                {user?.role === 'admin' && (
-                                  <svg className="ml-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                  </svg>
-                                )}
-                              </span>
-                            </td>
-                            <td className="whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">
-                              <div className="flex items-center space-x-2">
-                                {/* View Button - Eye Icon */}
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleViewBill(bill);
-                                  }}
-                                  className="text-blue-600 hover:text-blue-900 p-1 rounded-md hover:bg-blue-50"
-                                  title="View bill details"
-                                >
-                                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                  </svg>
-                                  <span className="sr-only">View bill #{bill._id}</span>
-                                </button>
-
-                                {/* Edit Button - Pencil Icon */}
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleEditBill(bill);
-                                  }}
-                                  className="text-green-600 hover:text-green-900 p-1 rounded-md hover:bg-green-50"
-                                  title="Edit bill"
-                                >
-                                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                  </svg>
-                                  <span className="sr-only">Edit bill #{bill._id}</span>
-                                </button>
-
-                                {/* Delete Button - Trash Icon */}
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDeleteBill(bill);
-                                  }}
-                                  className="text-red-600 hover:text-red-900 p-1 rounded-md hover:bg-red-50"
-                                  title="Delete bill"
-                                >
-                                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                  </svg>
-                                  <span className="sr-only">Delete bill #{bill._id}</span>
-                                </button>
-                              </div>
-                            </td>
+                    <div className="max-h-96 overflow-y-auto">
+                      <table className="min-w-full divide-y divide-gray-300">
+                        <thead className="bg-gray-50 sticky top-0">
+                          <tr>
+                            <th scope="col" className="py-2.5 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6">
+                              ID
+                            </th>
+                            <th scope="col" className="px-3 py-2.5 text-left text-xs font-semibold text-gray-900">
+                              Date
+                            </th>
+                            <th scope="col" className="px-3 py-2.5 text-left text-xs font-semibold text-gray-900">
+                              Type
+                            </th>
+                            <th scope="col" className="px-3 py-2.5 text-left text-xs font-semibold text-gray-900">
+                              Montant
+                            </th>
+                            <th scope="col" className="px-3 py-2.5 text-left text-xs font-semibold text-gray-900">
+                              Description
+                            </th>
+                            <th scope="col" className="px-3 py-2.5 text-left text-xs font-semibold text-gray-900">
+                              Statut
+                            </th>
+                            <th scope="col" className="px-3 py-2.5 text-left text-xs font-semibold text-gray-900">
+                              Actions
+                            </th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200 bg-white">
+                          {filteredBills.map((bill) => (
+                            <tr
+                              key={bill._id}
+                              className="hover:bg-gray-50"
+                            >
+                              <td className="whitespace-nowrap py-2.5 pl-4 pr-3 text-xs font-medium text-gray-900 sm:pl-6">
+                                #{bill._id.slice(-6)}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-2.5 text-xs text-gray-500">
+                                {formatDate(bill.date)}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-2.5 text-xs text-gray-500">
+                                {bill.type}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-2.5 text-xs text-gray-900 font-medium">
+                                {bill.amount.toFixed(2)}€
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-2.5 text-xs max-w-32 truncate" title={bill.description}>
+                                {bill.description}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-2.5 text-xs">
+                                <span
+                                  className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${getStatusClasses(bill.status)} ${getStatusClickableClasses(user?.role === 'admin')}`}
+                                  onClick={() => handleStatusClick(bill)}
+                                  title={user?.role === 'admin' ? 'Cliquer pour changer le statut' : ''}
+                                >
+                                  {bill.status}
+                                  {user?.role === 'admin' && (
+                                    <svg className="ml-1 h-2 w-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                  )}
+                                </span>
+                              </td>
+                              <td className="whitespace-nowrap py-2.5 pl-3 pr-4 text-xs font-medium sm:pr-6">
+                                <div className="flex items-center space-x-2">
+                                  {/* View Button - Eye Icon */}
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleViewBill(bill);
+                                    }}
+                                    className="text-blue-600 hover:text-blue-900 p-1 rounded-md hover:bg-blue-50"
+                                    title="View bill details"
+                                  >
+                                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    <span className="sr-only">View bill #{bill._id}</span>
+                                  </button>
 
-              {/* Pagination */}
-              <div className="mt-4 flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-                <div className="flex flex-1 justify-between sm:hidden">
-                  <button className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                    Previous
-                  </button>
-                  <button className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                    Next
-                  </button>
-                </div>
-                <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-                  <div>
-                    <p className="text-sm text-gray-700">
-                      Showing <span className="font-medium">1</span> to <span className="font-medium">{filteredBills.length}</span> of{' '}
-                      <span className="font-medium">{filteredBills.length}</span> results
-                    </p>
+                                  {/* Edit Button - Pencil Icon */}
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleEditBill(bill);
+                                    }}
+                                    className="text-green-600 hover:text-green-900 p-1 rounded-md hover:bg-green-50"
+                                    title="Edit bill"
+                                  >
+                                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                    <span className="sr-only">Edit bill #{bill._id}</span>
+                                  </button>
+
+                                  {/* Delete Button - Trash Icon */}
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleDeleteBill(bill);
+                                    }}
+                                    className="text-red-600 hover:text-red-900 p-1 rounded-md hover:bg-red-50"
+                                    title="Delete bill"
+                                  >
+                                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    <span className="sr-only">Delete bill #{bill._id}</span>
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                  <div>
-                    <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                      <button className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
-                        <span className="sr-only">Previous</span>
-                        <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                          <path fillRule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clipRule="evenodd" />
-                        </svg>
-                      </button>
-                      <button className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 bg-blue-50">
-                        1
-                      </button>
-                      <button className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
-                        <span className="sr-only">Next</span>
-                        <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                          <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
-                        </svg>
-                      </button>
-                    </nav>
+                </div>
+
+                {/* Pagination */}
+                <div className="mt-4 flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+                  <div className="flex flex-1 justify-between sm:hidden">
+                    <button className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                      Previous
+                    </button>
+                    <button className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                      Next
+                    </button>
+                  </div>
+                  <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                    <div>
+                      <p className="text-sm text-gray-700">
+                        Showing <span className="font-medium">1</span> to <span className="font-medium">{filteredBills.length}</span> of{' '}
+                        <span className="font-medium">{filteredBills.length}</span> results
+                      </p>
+                    </div>
+                    <div>
+                      <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                        <button className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                          <span className="sr-only">Previous</span>
+                          <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fillRule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clipRule="evenodd" />
+                          </svg>
+                        </button>
+                        <button className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 bg-blue-50">
+                          1
+                        </button>
+                        <button className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                          <span className="sr-only">Next</span>
+                          <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                          </svg>
+                        </button>
+                      </nav>
+                    </div>
                   </div>
                 </div>
               </div>
