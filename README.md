@@ -243,7 +243,7 @@ L'épreuve E5 vise à évaluer :
 
 ### Prérequis
 - Node.js v18 ou supérieur
-- MySQL v8.0 ou supérieur
+- MongoDB
 - Git v2.30 ou supérieur
 
 ### Installation
@@ -262,11 +262,6 @@ npm install
 ```
 
 ### Configuration
-1. **Base de données MySQL**
-   ```sql
-   CREATE DATABASE gsb_frais CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-   ```
-
 2. **Variables d'environnement**
    ```bash
    # Backend (.env)
