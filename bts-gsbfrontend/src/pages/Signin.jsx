@@ -135,24 +135,6 @@ export default function Signin() {
               </div>
             </div>
 
-            {/* Rôle */}
-            <div>
-              <label htmlFor="role" className="block text-sm font-medium text-gray-700">
-                Rôle
-              </label>
-              <div className="mt-1">
-                <select
-                  id="role"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
-                >
-                  <option value="user">Utilisateur</option>
-                  <option value="admin">Administrateur</option>
-                </select>
-              </div>
-            </div>
 
             {/* Mot de passe */}
             <div>
