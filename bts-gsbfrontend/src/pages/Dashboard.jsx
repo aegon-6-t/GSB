@@ -7,6 +7,7 @@ import AddBillModal from '../components/AddBillModal';
 import EditBillModal from '../components/EditBillModal';
 import DeleteConfirmModal from '../components/DeleteConfirmModal';
 import StatusChangeModal from '../components/StatusChangeModal';
+import BillsStatistics from '../components/BillsStatistics';
 
 // Sample bills data
 const initialBills = [
@@ -250,6 +251,11 @@ export default function Dashboard() {
                 Add Bill
               </button>
             </div>
+          </div>
+
+          {/* Statistics Section */}
+          <div className="mb-8">
+            <BillsStatistics bills={bills} />
           </div>
 
           {/* Filters */}
