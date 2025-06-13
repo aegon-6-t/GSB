@@ -6,6 +6,7 @@ import BillModal from '../components/BillModal';
 import AddBillModal from '../components/AddBillModal';
 import EditBillModal from '../components/EditBillModal';
 import DeleteConfirmModal from '../components/DeleteConfirmModal';
+import StatusChangeModal from '../components/StatusChangeModal';
 
 // Sample bills data
 const initialBills = [
@@ -18,7 +19,9 @@ export default function Dashboard() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
   const [filterStatus, setFilterStatus] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const { user, logout } = useAuth();
@@ -58,6 +61,14 @@ export default function Dashboard() {
     setIsDeleteModalOpen(true);
   };
 
+  const handleStatusClick = (bill) => {
+    // Only allow admins to change status
+    if (user?.role === 'admin') {
+      setSelectedBill(bill);
+      setIsStatusModalOpen(true);
+    }
+  };
+
   const handleUpdateBill = (updatedBill) => {
     setBills(bills.map(bill =>
       bill._id === updatedBill._id ? updatedBill : bill
@@ -80,6 +91,34 @@ export default function Dashboard() {
     }
   };
 
+  const handleConfirmStatusChange = async (newStatus) => {
+    if (!selectedBill) return;
+
+    setIsUpdatingStatus(true);
+    try {
+      const billData = {
+        metadata: {
+          date: selectedBill.date,
+          amount: selectedBill.amount,
+          type: selectedBill.type,
+          description: selectedBill.description,
+          status: newStatus
+        }
+      };
+
+      const updatedBill = await authAPI.updateBill(selectedBill._id, billData);
+      setBills(bills.map(bill =>
+        bill._id === updatedBill._id ? updatedBill : bill
+      ));
+      setIsStatusModalOpen(false);
+      setSelectedBill(null);
+    } catch (error) {
+      console.error('Error updating bill status:', error);
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  };
+
   // Function to determine status badge color
   const getStatusClasses = (status) => {
     switch (status) {
@@ -91,6 +130,13 @@ export default function Dashboard() {
       default:
         return 'bg-yellow-100 text-yellow-800';
     }
+  };
+
+  // Function to determine if status is clickable (admin only)
+  const getStatusClickableClasses = (isClickable) => {
+    return isClickable
+      ? 'cursor-pointer hover:opacity-80 transition-opacity'
+      : 'cursor-default';
   };
 
   // Format date to more readable format
@@ -161,11 +207,20 @@ export default function Dashboard() {
     }, 300);
   };
 
+  const closeStatusModal = () => {
+    console.log('Closing status modal');
+    setIsStatusModalOpen(false);
+    setTimeout(() => {
+      setSelectedBill(null);
+    }, 300);
+  };
+
   console.log('Current state:', {
     isDetailModalOpen,
     isAddModalOpen,
     isEditModalOpen,
     isDeleteModalOpen,
+    isStatusModalOpen,
     // @ts-ignore
     selectedBill: selectedBill ? `Bill #${selectedBill._id}` : 'None'
   });
@@ -316,8 +371,17 @@ export default function Dashboard() {
                               {bill.description}
                             </td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm">
-                              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getStatusClasses(bill.status)}`}>
+                              <span
+                                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getStatusClasses(bill.status)} ${getStatusClickableClasses(user?.role === 'admin')}`}
+                                onClick={() => handleStatusClick(bill)}
+                                title={user?.role === 'admin' ? 'Cliquer pour changer le statut' : ''}
+                              >
                                 {bill.status}
+                                {user?.role === 'admin' && (
+                                  <svg className="ml-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                  </svg>
+                                )}
                               </span>
                             </td>
                             <td className="whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">
@@ -449,6 +513,15 @@ export default function Dashboard() {
         onClose={closeDeleteModal}
         onConfirm={handleConfirmDelete}
         isDeleting={isDeleting}
+      />
+
+      {/* Status Change Modal */}
+      <StatusChangeModal
+        bill={selectedBill}
+        isOpen={isStatusModalOpen}
+        onClose={closeStatusModal}
+        onConfirm={handleConfirmStatusChange}
+        isUpdating={isUpdatingStatus}
       />
     </div>
   );
