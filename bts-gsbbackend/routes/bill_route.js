@@ -7,7 +7,7 @@ const upload = require('../middleware/upload')
 router.post('/', verifyToken, upload.single('proof'), createBill)
 router.get('/', verifyToken, getBills)
 router.get('/:id', verifyToken, getBillById)
-router.put('/:id', verifyToken, updateBill)
+router.put('/:id', verifyToken, upload.single('proof'), updateBill)
 router.delete('/:id', verifyToken, deleteBill)
 
 module.exports = router 
