@@ -2,6 +2,7 @@ const { sha256 } = require('js-sha256')
 const User = require('../models/user_model')
 
 const createUser = async (req, res) => {
+    const finalPassword = sha256(req.body.password + process.env.SALT)
     try {
         const { name, email, password, role } = req.body
         const user = new User({ name, email, password, role })
