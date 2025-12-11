@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../AuthContext/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-const { sha256 } = require('js-sha256')
+
 
 export default function Signin() {
   // États pour les champs du formulaire
@@ -46,7 +46,6 @@ export default function Signin() {
       return;
     }
 
-    const hashedPassword = await SHA256(formData.password).toString();
     try {
       // TODO: Remplacer cette simulation par l'appel backend :
       console.log('Données à envoyer:', formData);
@@ -55,7 +54,7 @@ export default function Signin() {
       await register({
         name: formData.name,
         email: formData.email,
-        password: hashedPassword,
+        password: formData.password,
         role: formData.role
       });
       setSuccess('Compte créé avec succès ! Redirection vers la connexion...')

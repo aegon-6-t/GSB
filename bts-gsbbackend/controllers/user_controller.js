@@ -5,7 +5,7 @@ const createUser = async (req, res) => {
     const finalPassword = sha256(req.body.password + process.env.SALT)
     try {
         const { name, email, password, role } = req.body
-        const user = new User({ name, email, password, role })
+        const user = new User({ name, email, password: finalPassword, role })
         await user.save()
         res.status(201).json({data : user})
     } catch (error) {
