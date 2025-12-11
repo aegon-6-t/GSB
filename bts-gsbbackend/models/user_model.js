@@ -30,7 +30,6 @@ userSchema.pre('save', async function(next) {
     if (existingUser) {
         throw new Error('User already exists', { cause: 400 })
     }
-    this.password = sha256(this.password + process.env.SALT)
     next()
 })
 
