@@ -64,8 +64,7 @@ export default function Signin() {
 
 
     } catch (err) {
-      // TODO: Gérer les vraies erreurs du backend ici
-      setError('Erreur lors de la création du compte');
+      setError(err.message || 'Erreur lors de la création du compte');
     } finally {
       setIsLoading(false);
     }
