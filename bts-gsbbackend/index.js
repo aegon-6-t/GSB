@@ -16,15 +16,9 @@ db.on('open', () => { console.log('Connected to MongoDB')})
 // Configuration CORS
 app.use(cors({
   origin: function (origin, callback) {
-    const allowedOrigins = [
-      'http://localhost:5173',
-      'https://gsb-galaxyswissbourdin.onrender.com'
-     ]  // URL de votre frontend
-     if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-     } else {
-      callback(new Error('Not allowed by CORS'))
-     }
+    // Autoriser toutes les origines pour le moment sur Vercel
+    // ou vous pouvez spécifier l'URL exacte du frontend Vercel
+    callback(null, true);
   },
   credentials: true // Pour permettre l'envoi des cookies si nécessaire
 }));
